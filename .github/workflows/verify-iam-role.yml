@@ -1,0 +1,24 @@
+name: Verify IAM Role
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  verify-iam-role:
+    runs-on: ubuntu-latest
+    steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::912493297952:role/gh-oidc-demo-dev-AssumableRole
+          role-session-name: verify-iam-role-job
+          aws-region: eu-central-1
+      - name: Verify IAM Role
+        run: aws sts get-caller-identity
